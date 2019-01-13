@@ -1,0 +1,52 @@
+
+  - name: Create VPC
+    ec2_vpc_net:
+      name: vpc_redmine
+      cidr_block: 172.31.0.0/16
+      region: sa-east-1
+    register: vpc
+
+  - name: Create SG
+    ec2_group:
+      name: sg_redmine
+      description: "redmine sg"
+      vpc_id: "{{ vpc['vpc']['id'] }}"
+      region: sa-east-1
+      rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 172.31.0.0/16
+    register: sg
+
+  - name: Create Subnet
+    ec2_vpc_subnet:
+      state: present
+      vpc_id: "{{ vpc['vpc']['id'] }}"
+      cidr: 172.31.0.1/24
+      region: sa-east-1
+      resource_tags:
+        Name: redmine subnet
+    register: subnet
+
+  - name: Create Keypair
+    ec2_key:
+      region: sa-east-1
+      name: keypair_redmine
+    register: key
+
+  - name: Launch Instance
+    ec2:
+      group: sg_redmine
+      vpc_subnet_id: "{{ subnet['subnet']['id'] }}"
+      instance_type: t1.micro
+      image: ami-00d2b0214af0e2a9f
+      wait: yes
+      keypair: "{{ key['key']['name'] }}"
+      id: "test"
+      count: 1
+      region: sa-east-1

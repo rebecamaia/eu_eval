@@ -1,0 +1,8 @@
+---
+  - name: Provisioning Instance
+    hosts: local
+    connection: local
+    gather_facts: false
+    tasks:
+      - include: provisioning.yaml
+#      - include: database.yaml
