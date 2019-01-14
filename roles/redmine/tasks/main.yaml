@@ -5,4 +5,5 @@
     gather_facts: false
     tasks:
       - include: provisioning.yaml
-#      - include: database.yaml
+      - include: database.yaml
+      - include: cdn.yaml

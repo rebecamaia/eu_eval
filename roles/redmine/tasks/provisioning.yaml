@@ -47,6 +47,6 @@
       image: ami-00d2b0214af0e2a9f
       wait: yes
       keypair: "{{ key['key']['name'] }}"
-      id: "test"
+      id: "redmine"
       count: 1
       region: sa-east-1
