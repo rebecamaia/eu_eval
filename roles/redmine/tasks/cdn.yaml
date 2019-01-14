@@ -1,0 +1,21 @@
+
+  - name: Create Bucket
+    s3_bucket:
+      state: present
+      region: sa-east-1
+      name: redmine-bucket-2671386
+    register: bucket
+
+  - name: Bucket Facts
+    aws_s3_bucket_facts:
+      region: sa-east-1
+    register: bucket_facts
+
+  - name: Create CDN
+    cloudfront_distribution:
+      state: present
+      default_origin_domain_name: "{{ bucket['name'] }}"
+      tags:
+        Name: redmine
+        Project: redmine
+        Priority: '1'
