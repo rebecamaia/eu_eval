@@ -14,7 +14,7 @@
   - name: Create CDN
     cloudfront_distribution:
       state: present
-      default_origin_domain_name: "{{ bucket['name'] }}"
+      default_origin_domain_name: "{{ bucket_facts['name'] }}"
       tags:
         Name: redmine
         Project: redmine
